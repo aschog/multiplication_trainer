@@ -3,11 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as _i4;
+
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:multiply_fast/core/error/faiures.dart' as _i4;
+import 'package:multiply_fast/core/error/faiures.dart' as _i5;
 import 'package:multiply_fast/features/generateQustion/domain/entities/question.dart'
-    as _i5;
+    as _i6;
 import 'package:multiply_fast/features/generateQustion/domain/repositories/practice_repository.dart'
     as _i3;
 
@@ -41,13 +43,16 @@ class MockPracticeRepository extends _i1.Mock
   }
 
   @override
-  _i2.Either<_i4.Failure, _i5.Question> getQuestion() =>
+  _i4.Future<_i2.Either<_i5.Failure, _i6.Question>> getQuestion() =>
       (super.noSuchMethod(
             Invocation.method(#getQuestion, []),
-            returnValue: _FakeEither_0<_i4.Failure, _i5.Question>(
-              this,
-              Invocation.method(#getQuestion, []),
-            ),
+            returnValue:
+                _i4.Future<_i2.Either<_i5.Failure, _i6.Question>>.value(
+                  _FakeEither_0<_i5.Failure, _i6.Question>(
+                    this,
+                    Invocation.method(#getQuestion, []),
+                  ),
+                ),
           )
-          as _i2.Either<_i4.Failure, _i5.Question>);
+          as _i4.Future<_i2.Either<_i5.Failure, _i6.Question>>);
 }
