@@ -41,15 +41,12 @@ class MockPracticeRepository extends _i1.Mock
   }
 
   @override
-  _i2.Either<_i4.Failure, _i5.Question> getQuestion(
-    int? factor1,
-    int? factor2,
-  ) =>
+  _i2.Either<_i4.Failure, _i5.Question> getQuestion() =>
       (super.noSuchMethod(
-            Invocation.method(#getQuestion, [factor1, factor2]),
+            Invocation.method(#getQuestion, []),
             returnValue: _FakeEither_0<_i4.Failure, _i5.Question>(
               this,
-              Invocation.method(#getQuestion, [factor1, factor2]),
+              Invocation.method(#getQuestion, []),
             ),
           )
           as _i2.Either<_i4.Failure, _i5.Question>);

@@ -8,7 +8,7 @@ class GenerateQuestion {
 
   GenerateQuestion(this.repository);
 
-  Either<Failure, Question> execute({required int factor1, required int factor2}) {
-    return repository.getQuestion(factor1, factor2);
+  Either<Failure, Question> execute() {
+    return repository.getQuestion();
   }
 }

@@ -23,10 +23,10 @@ void main() {
   final tQuestion = Question(factor1: tFactor1, factor2: tFactor2, answer: 6);
 
   test('should calculate correct answer', () {
-    when(mockPracticeRepository.getQuestion(any, any)).thenAnswer((_) => Right(tQuestion));
-    final result = usecase.execute(factor1: tFactor1, factor2: tFactor2);
+    when(mockPracticeRepository.getQuestion()).thenAnswer((_) => Right(tQuestion));
+    final result = usecase.execute();
     expect(result, Right(tQuestion));
-    verify(mockPracticeRepository.getQuestion(tFactor1, tFactor2));
+    verify(mockPracticeRepository.getQuestion());
     verifyNoMoreInteractions(mockPracticeRepository);
   });
 }

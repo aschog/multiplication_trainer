@@ -3,5 +3,5 @@ import 'package:multiply_fast/features/generateQustion/domain/entities/question.
 import 'package:dartz/dartz.dart';
 
 abstract class PracticeRepository {
-  Either<Failure, Question> getQuestion(int factor1, int factor2);
+  Either<Failure, Question> getQuestion();
 }
