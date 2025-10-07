@@ -24,7 +24,7 @@ This is a Flutter application for multiplication training, following Clean Archi
 lib/
 ├── core/           # Shared utilities and base classes
 ├── features/       # Feature modules
-│   └── generateQuestion/  # Example feature module
+│   └── question_generator/  # Example feature module
 └── main.dart       # Application entry point
 ```
 
