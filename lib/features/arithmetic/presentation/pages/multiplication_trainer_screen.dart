@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multiplication_trainer/features/arithmetic/presentation/bloc/multiplication_execise_bloc.dart';
 import 'package:multiplication_trainer/features/arithmetic/presentation/widgets/multiplication_trainer_button.dart';
 
 class MultiplicationTrainerScreen extends StatelessWidget {
@@ -9,7 +11,6 @@ class MultiplicationTrainerScreen extends StatelessWidget {
   static const Color operatorColor = Color(0xFFFF9500);
   static const Color specialZeroColor = Color(0xFF333333);
 
-  final String displayOutput = '888';
   static const double maxWidth = 450.0;
   @override
   Widget build(BuildContext context) {
@@ -21,102 +22,114 @@ class MultiplicationTrainerScreen extends StatelessWidget {
       [' ', '0', '.', '='],
     ];
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: SizedBox(
-              width: maxWidth,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(color: Colors.white24, width: 1.0),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          displayOutput,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.displayLarge!.copyWith(fontSize: 90),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    // Button Grid
-                    Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 20,
-                          right: 10,
-                          left: 10,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: buttons.map((row) {
-                            return Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: row.map((button) {
-                                  // Determine button color
-                                  Color color = numPadColor;
-                                  Color textColor = Colors.white;
-                                  int flex = 1;
-
-                                  if (['AC', '+/-', '%'].contains(button)) {
-                                    color = utilityColor;
-                                    textColor = Colors.black;
-                                  } else if ([
-                                    '÷',
-                                    '×',
-                                    '-',
-                                    '+',
-                                    '=',
-                                  ].contains(button)) {
-                                    color = operatorColor;
-                                  }
-
-                                  if (button == '.') {
-                                    color = specialZeroColor;
-                                  } else if (button == '=') {
-                                    color = operatorColor;
-                                  }
-
-                                  // Use the custom CalculatorButton with animation logic
-                                  return Expanded(
-                                    flex: flex,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: MultiplicationTrainerButton(
-                                        key: ValueKey(button),
-                                        buttonText: button,
-                                        color: color,
-                                        textColor: textColor,
-                                        onTap: () {
-                                          print(
-                                            'Button pressed: $button (Animation triggered)',
-                                          );
-                                        },
-                                      ),
-                                    ),
+    return BlocProvider(
+      create: (context) => MultiplicationExerciseBloc(),
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SizedBox(
+                width: maxWidth,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    border: Border.all(color: Colors.white24, width: 1.0),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(20),
+                          child:
+                              BlocBuilder<
+                                MultiplicationExerciseBloc,
+                                MultiplicationExerciseState
+                              >(
+                                builder: (context, state) {
+                                  return Text(
+                                    state.displayOutput,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayLarge!
+                                        .copyWith(fontSize: 90),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   );
-                                }).toList(),
+                                },
                               ),
-                            );
-                          }).toList(),
                         ),
                       ),
-                    ),
-                  ],
+                      // Button Grid
+                      Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 20,
+                            right: 10,
+                            left: 10,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: buttons.map((row) {
+                              return Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: row.map((button) {
+                                    // Determine button color
+                                    Color color = numPadColor;
+                                    Color textColor = Colors.white;
+                                    int flex = 1;
+
+                                    if (['AC', '+/-', '%'].contains(button)) {
+                                      color = utilityColor;
+                                      textColor = Colors.black;
+                                    } else if ([
+                                      '÷',
+                                      '×',
+                                      '-',
+                                      '+',
+                                      '=',
+                                    ].contains(button)) {
+                                      color = operatorColor;
+                                    }
+
+                                    if (button == '.') {
+                                      color = specialZeroColor;
+                                    } else if (button == '=') {
+                                      color = operatorColor;
+                                    }
+
+                                    // Use the custom CalculatorButton with animation logic
+                                    return Expanded(
+                                      flex: flex,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: MultiplicationTrainerButton(
+                                          key: ValueKey(button),
+                                          buttonText: button,
+                                          color: color,
+                                          textColor: textColor,
+                                          onTap: () {
+                                            print(
+                                              'Button pressed: $button (Animation triggered)',
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
