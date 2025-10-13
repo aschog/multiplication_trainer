@@ -191,16 +191,15 @@ class _MultiplicationTrainerViewState
                         ],
                       ),
                     ),
-
-                    // 🎉 Confetti for correct answers (green, upward)
                     Align(
-                      alignment: Alignment.topCenter,
+                      alignment: Alignment.center,
                       child: ConfettiWidget(
                         confettiController: _confettiControllerCorrect,
-                        blastDirection: -3.14 / 2, // upward
+                        blastDirection: -3.14 / 2,
                         blastDirectionality: BlastDirectionality.explosive,
                         emissionFrequency: 0.05,
                         numberOfParticles: 50,
+                        gravity: 0.3,
                       ),
                     ),
                   ],
