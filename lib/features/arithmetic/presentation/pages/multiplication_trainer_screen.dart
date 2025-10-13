@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multiplication_trainer/features/arithmetic/presentation/bloc/multiplication_execise_bloc.dart';
@@ -16,14 +17,41 @@ class MultiplicationTrainerScreen extends StatelessWidget {
   }
 }
 
-class _MultiplicationTrainerView extends StatelessWidget {
+class _MultiplicationTrainerView extends StatefulWidget {
   const _MultiplicationTrainerView();
+
+  @override
+  State<_MultiplicationTrainerView> createState() =>
+      _MultiplicationTrainerViewState();
+}
+
+class _MultiplicationTrainerViewState
+    extends State<_MultiplicationTrainerView> {
+  late ConfettiController _confettiControllerCorrect;
+  late ConfettiController _confettiControllerIncorrect;
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiControllerCorrect =
+        ConfettiController(duration: const Duration(milliseconds: 800));
+    _confettiControllerIncorrect =
+        ConfettiController(duration: const Duration(milliseconds: 800));
+  }
+
+  @override
+  void dispose() {
+    _confettiControllerCorrect.dispose();
+    _confettiControllerIncorrect.dispose();
+    super.dispose();
+  }
+
   static const Color numPadColor = Color(0xFF333333);
   static const Color utilityColor = Color(0xFFA6A6A6);
   static const Color operatorColor = Color(0xFFFF9500);
   static const Color specialZeroColor = Color(0xFF333333);
-
   static const double maxWidth = 450.0;
+
   @override
   Widget build(BuildContext context) {
     final List<List<String>> buttons = [
@@ -35,116 +63,144 @@ class _MultiplicationTrainerView extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: SizedBox(
-              width: maxWidth,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(color: Colors.white24, width: 1.0),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(20),
-                        child: BlocBuilder<MultiplicationExerciseBloc,
-                            MultiplicationExerciseState>(
-                          builder: (context, state) {
-                            Color displayColor = Colors.white;
-                            if (state.status == AnswerStatus.incorrect) {
-                              displayColor = Colors.red;
-                            } else if (state.status == AnswerStatus.correct) {
-                              displayColor = Colors.green;
-                            }
-
-                            return Text(
-                              state.displayOutput,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayLarge!
-                                  .copyWith(
-                                    fontSize: state.status ==
-                                                AnswerStatus.incorrect ||
-                                            state.status == AnswerStatus.correct
-                                        ? 60
-                                        : 90,
-                                    color: displayColor,
-                                  ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            );
-                          },
-                        ),
+        child: BlocListener<MultiplicationExerciseBloc,
+            MultiplicationExerciseState>(
+          listenWhen: (previous, current) => previous.status != current.status,
+          listener: (context, state) {
+            if (state.status == AnswerStatus.correct) {
+              _confettiControllerCorrect.play();
+            } else if (state.status == AnswerStatus.incorrect) {
+              _confettiControllerIncorrect.play();
+            }
+          },
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SizedBox(
+                width: maxWidth,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Main trainer container
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        border: Border.all(color: Colors.white24, width: 1.0),
                       ),
-                    ),
-                    // Button Grid
-                    Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 20,
-                          right: 10,
-                          left: 10,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: buttons.map((row) {
-                            return Expanded(
-                              child: Row(
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(20),
+                              child: BlocBuilder<MultiplicationExerciseBloc,
+                                  MultiplicationExerciseState>(
+                                builder: (context, state) {
+                                  Color displayColor = Colors.white;
+                                  if (state.status == AnswerStatus.incorrect) {
+                                    displayColor = Colors.red;
+                                  } else if (state.status ==
+                                      AnswerStatus.correct) {
+                                    displayColor = Colors.green;
+                                  }
+
+                                  return Text(
+                                    state.displayOutput,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayLarge!
+                                        .copyWith(
+                                          fontSize: state.status ==
+                                                      AnswerStatus.incorrect ||
+                                                  state.status ==
+                                                      AnswerStatus.correct
+                                              ? 60
+                                              : 90,
+                                          color: displayColor,
+                                        ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 20,
+                                right: 10,
+                                left: 10,
+                              ),
+                              child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: row.map((button) {
-                                  // Determine button color
-                                  Color color = numPadColor;
-                                  Color textColor = Colors.white;
-                                  int flex = 1;
-
-                                  if (['AC', '+/-', '%'].contains(button)) {
-                                    color = utilityColor;
-                                    textColor = Colors.black;
-                                  } else if ([
-                                    '÷',
-                                    '×',
-                                    '-',
-                                    '+',
-                                    '=',
-                                  ].contains(button)) {
-                                    color = operatorColor;
-                                  }
-
-                                  if (button == '.') {
-                                    color = specialZeroColor;
-                                  } else if (button == '=') {
-                                    color = operatorColor;
-                                  }
+                                    MainAxisAlignment.spaceAround,
+                                children: buttons.map((row) {
                                   return Expanded(
-                                    flex: flex,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: MultiplicationTrainerButton(
-                                        key: ValueKey(button),
-                                        buttonText: button,
-                                        color: color,
-                                        textColor: textColor,
-                                        onTap: () {
-                                          BlocProvider.of<
-                                                      MultiplicationExerciseBloc>(
-                                                  context)
-                                              .add(ButtonPressed(button));
-                                        },
-                                      ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: row.map((button) {
+                                        Color color = numPadColor;
+                                        Color textColor = Colors.white;
+
+                                        if (['AC', '+/-', '%']
+                                            .contains(button)) {
+                                          color = utilityColor;
+                                          textColor = Colors.black;
+                                        } else if ([
+                                          '÷',
+                                          '×',
+                                          '-',
+                                          '+',
+                                          '=',
+                                        ].contains(button)) {
+                                          color = operatorColor;
+                                        }
+
+                                        if (button == '.') {
+                                          color = specialZeroColor;
+                                        }
+
+                                        return Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(6.0),
+                                            child: MultiplicationTrainerButton(
+                                              key: ValueKey(button),
+                                              buttonText: button,
+                                              color: color,
+                                              textColor: textColor,
+                                              onTap: () {
+                                                context
+                                                    .read<
+                                                        MultiplicationExerciseBloc>()
+                                                    .add(ButtonPressed(button));
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
                                   );
                                 }).toList(),
                               ),
-                            );
-                          }).toList(),
-                        ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // 🎉 Confetti for correct answers (green, upward)
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: ConfettiWidget(
+                        confettiController: _confettiControllerCorrect,
+                        blastDirection: -3.14 / 2, // upward
+                        blastDirectionality: BlastDirectionality.explosive,
+                        emissionFrequency: 0.05,
+                        numberOfParticles: 50,
                       ),
                     ),
                   ],
