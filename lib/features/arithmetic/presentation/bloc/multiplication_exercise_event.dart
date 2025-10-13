@@ -7,8 +7,13 @@ abstract class MultiplicationExerciseEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class ExerciseRequested extends MultiplicationExerciseEvent {}
+
 class ButtonPressed extends MultiplicationExerciseEvent {
   final String buttonText;
 
-  ButtonPressed(this.buttonText);
+  const ButtonPressed(this.buttonText);
+
+  @override
+  List<Object> get props => [buttonText];
 }

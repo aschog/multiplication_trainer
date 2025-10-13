@@ -9,11 +9,11 @@ abstract class ArithmeticLocalDataSource {
   Future<MultiplicationExerciseModel> generateMultiplicationExercise();
 }
 
-class ArithmeticLocalDataSourceIml implements ArithmeticLocalDataSource {
+class ArithmeticLocalDataSourceImpl implements ArithmeticLocalDataSource {
   @override
   final Random random;
 
-  ArithmeticLocalDataSourceIml({required this.random});
+  ArithmeticLocalDataSourceImpl({required this.random});
   final int _max = 10;
   @override
   Future<MultiplicationExerciseModel> generateMultiplicationExercise() async {

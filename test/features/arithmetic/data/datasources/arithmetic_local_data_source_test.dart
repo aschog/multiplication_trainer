@@ -15,7 +15,7 @@ void main() {
 
   setUp(() {
     mockRandom = MockRandom();
-    dataSource = ArithmeticLocalDataSourceIml(random: mockRandom);
+    dataSource = ArithmeticLocalDataSourceImpl(random: mockRandom);
   });
 
   group('generetaMultiplicationExercise', () {
