@@ -27,11 +27,10 @@ class _MultiplicationTrainerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<List<String>> buttons = [
-      ['AC', '+/-', '%', '÷'],
-      ['7', '8', '9', '×'],
-      ['4', '5', '6', '-'],
-      ['1', '2', '3', '+'],
-      [' ', '0', '.', '='],
+      ['7', '8', '9'],
+      ['4', '5', '6'],
+      ['1', '2', '3'],
+      ['AC', '0', '.'],
     ];
 
     return Scaffold(
