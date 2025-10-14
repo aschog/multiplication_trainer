@@ -8,10 +8,8 @@
 
 ## 🎯 Acceptance Criteria
 
-| #   | Criteria                                                  | Status |
-| --- | --------------------------------------------------------- | ------ |
-| 1   | [Describe the expected behavior or condition]             | ☐      |
-| 2   | [Describe another condition or edge case]                 | ☐      |
-| 3   | [Optional: performance, UX, or accessibility requirement] | ☐      |
-
-_(Mark with ☑️ when implemented and verified)_
+| #   | Criteria                                                  |
+| --- | --------------------------------------------------------- |
+| 1   | [Describe the expected behavior or condition]             |
+| 2   | [Describe another condition or edge case]                 |
+| 3   | [Optional: performance, UX, or accessibility requirement] |
