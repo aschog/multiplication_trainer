@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,22 +29,24 @@ class _MultiplicationTrainerView extends StatefulWidget {
 
 class _MultiplicationTrainerViewState
     extends State<_MultiplicationTrainerView> {
-  late ConfettiController _confettiControllerCorrect;
-  late ConfettiController _confettiControllerIncorrect;
+  late ConfettiController _confettiControllerTimer;
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    _confettiControllerCorrect =
-        ConfettiController(duration: const Duration(milliseconds: 800));
-    _confettiControllerIncorrect =
-        ConfettiController(duration: const Duration(milliseconds: 800));
+
+    _confettiControllerTimer =
+        ConfettiController(duration: const Duration(seconds: 1));
+    _timer = Timer(const Duration(minutes: 5), () {
+      _confettiControllerTimer.play();
+    });
   }
 
   @override
   void dispose() {
-    _confettiControllerCorrect.dispose();
-    _confettiControllerIncorrect.dispose();
+    _confettiControllerTimer.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -66,13 +70,7 @@ class _MultiplicationTrainerViewState
         child: BlocListener<MultiplicationExerciseBloc,
             MultiplicationExerciseState>(
           listenWhen: (previous, current) => previous.status != current.status,
-          listener: (context, state) {
-            if (state.status == AnswerStatus.correct) {
-              _confettiControllerCorrect.play();
-            } else if (state.status == AnswerStatus.incorrect) {
-              _confettiControllerIncorrect.play();
-            }
-          },
+          listener: (context, state) {},
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -194,7 +192,7 @@ class _MultiplicationTrainerViewState
                     Align(
                       alignment: Alignment.center,
                       child: ConfettiWidget(
-                        confettiController: _confettiControllerCorrect,
+                        confettiController: _confettiControllerTimer,
                         blastDirection: -3.14 / 2,
                         blastDirectionality: BlastDirectionality.explosive,
                         emissionFrequency: 0.05,
