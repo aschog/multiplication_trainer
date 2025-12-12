@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multiplication_trainer/features/arithmetic/presentation/pages/multiplication_trainer_screen.dart';
 import 'injection_container.dart' as di;
+import 'package:multiplication_trainer/config/theme/app_theme.dart';
 
 void main() async {
   await di.init();
@@ -15,16 +16,7 @@ class CalculatorApp extends StatelessWidget {
     return MaterialApp(
       title: 'Multiplication Trainer',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFFA6A6A6),
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            color: Colors.white,
-            fontSize: 100,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-      ),
+      theme: AppTheme.light,
       home: const MultiplicationTrainerScreen(),
     );
   }

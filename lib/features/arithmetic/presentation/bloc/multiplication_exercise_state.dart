@@ -6,13 +6,15 @@ class MultiplicationExerciseState extends Equatable {
   final MultiplicationExercise? exercise;
   final String displayOutput;
   final AnswerStatus status;
+
   @override
   List<Object?> get props => [exercise, displayOutput, status];
 
-  const MultiplicationExerciseState(
-      {this.exercise,
-      required this.displayOutput,
-      this.status = AnswerStatus.initial});
+  const MultiplicationExerciseState({
+    this.exercise,
+    required this.displayOutput,
+    this.status = AnswerStatus.initial,
+  });
 
   MultiplicationExerciseState copyWith({
     MultiplicationExercise? exercise,

@@ -1,26 +1,35 @@
-import 'dart:async';
-
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multiplication_trainer/config/theme/app_colors.dart';
 import 'package:multiplication_trainer/features/arithmetic/presentation/bloc/multiplication_execise_bloc.dart';
-import 'package:multiplication_trainer/features/arithmetic/presentation/widgets/multiplication_trainer_button.dart';
+import 'package:multiplication_trainer/features/arithmetic/presentation/widgets/multiplicand_selector/cubit/multiplicand_config_cubit.dart';
+import 'package:multiplication_trainer/features/arithmetic/presentation/widgets/keypad.dart';
+import 'package:multiplication_trainer/features/arithmetic/presentation/widgets/multiplicand_selector/multiplicand_selector.dart';
 import 'package:multiplication_trainer/injection_container.dart';
+import 'package:flutter/foundation.dart';
 
 class MultiplicationTrainerScreen extends StatelessWidget {
   const MultiplicationTrainerScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<MultiplicationExerciseBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<MultiplicandConfigCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<MultiplicationExerciseBloc>(),
+        ),
+      ],
       child: const _MultiplicationTrainerView(),
     );
   }
 }
 
 class _MultiplicationTrainerView extends StatefulWidget {
-  const _MultiplicationTrainerView();
+  const _MultiplicationTrainerView({
+    super.key,
+  });
 
   @override
   State<_MultiplicationTrainerView> createState() =>
@@ -29,182 +38,76 @@ class _MultiplicationTrainerView extends StatefulWidget {
 
 class _MultiplicationTrainerViewState
     extends State<_MultiplicationTrainerView> {
-  late ConfettiController _confettiControllerTimer;
-  late Timer _timer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _confettiControllerTimer =
-        ConfettiController(duration: const Duration(seconds: 1));
-    _timer = Timer(const Duration(minutes: 5), () {
-      _confettiControllerTimer.play();
-    });
-  }
-
-  @override
-  void dispose() {
-    _confettiControllerTimer.dispose();
-    _timer.cancel();
-    super.dispose();
-  }
-
-  static const Color numPadColor = Color(0xFF333333);
-  static const Color utilityColor = Color(0xFFA6A6A6);
-  static const Color operatorColor = Color(0xFFFF9500);
-  static const Color specialZeroColor = Color(0xFF333333);
-  static const double maxWidth = 450.0;
-
   @override
   Widget build(BuildContext context) {
-    final List<List<String>> buttons = [
-      ['7', '8', '9'],
-      ['4', '5', '6'],
-      ['1', '2', '3'],
-      ['AC', '0', '.'],
-    ];
-
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
-        child: BlocListener<MultiplicationExerciseBloc,
-            MultiplicationExerciseState>(
-          listenWhen: (previous, current) => previous.status != current.status,
-          listener: (context, state) {},
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SizedBox(
-                width: maxWidth,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Main trainer container
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        border: Border.all(color: Colors.white24, width: 1.0),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(20),
-                              child: BlocBuilder<MultiplicationExerciseBloc,
-                                  MultiplicationExerciseState>(
-                                builder: (context, state) {
-                                  Color displayColor = Colors.white;
-                                  if (state.status == AnswerStatus.incorrect) {
-                                    displayColor = Colors.red;
-                                  } else if (state.status ==
-                                      AnswerStatus.correct) {
-                                    displayColor = Colors.green;
-                                  }
+        child: Center(
+          child: BlocBuilder<MultiplicationExerciseBloc,
+              MultiplicationExerciseState>(builder: (context, state) {
+            return _buildScreen(context, state);
+          }),
+        ),
+      ),
+    );
+  }
 
-                                  return Text(
-                                    state.displayOutput,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge!
-                                        .copyWith(
-                                          fontSize: state.status ==
-                                                      AnswerStatus.incorrect ||
-                                                  state.status ==
-                                                      AnswerStatus.correct
-                                              ? 60
-                                              : 90,
-                                          color: displayColor,
-                                        ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 20,
-                                right: 10,
-                                left: 10,
-                              ),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: buttons.map((row) {
-                                  return Expanded(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: row.map((button) {
-                                        Color color = numPadColor;
-                                        Color textColor = Colors.white;
+  Widget _buildScreen(BuildContext context, MultiplicationExerciseState state) {
+    final gameColors = Theme.of(context).extension<GameThemeColors>()!;
+    Color displayColor = gameColors.textMainColor!;
+    if (state.status == AnswerStatus.incorrect) {
+      displayColor = Colors.red;
+    } else if (state.status == AnswerStatus.correct) {
+      displayColor = Colors.green;
+    }
 
-                                        if (['AC', '+/-', '%']
-                                            .contains(button)) {
-                                          color = utilityColor;
-                                          textColor = Colors.black;
-                                        } else if ([
-                                          '÷',
-                                          '×',
-                                          '-',
-                                          '+',
-                                          '=',
-                                        ].contains(button)) {
-                                          color = operatorColor;
-                                        }
-
-                                        if (button == '.') {
-                                          color = specialZeroColor;
-                                        }
-
-                                        return Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: MultiplicationTrainerButton(
-                                              key: ValueKey(button),
-                                              buttonText: button,
-                                              color: color,
-                                              textColor: textColor,
-                                              onTap: () {
-                                                context
-                                                    .read<
-                                                        MultiplicationExerciseBloc>()
-                                                    .add(ButtonPressed(button));
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ConfettiWidget(
-                        confettiController: _confettiControllerTimer,
-                        blastDirection: -3.14 / 2,
-                        blastDirectionality: BlastDirectionality.explosive,
-                        emissionFrequency: 0.05,
-                        numberOfParticles: 50,
-                        gravity: 0.3,
-                      ),
-                    ),
-                  ],
-                ),
+    return Container(
+      decoration: kIsWeb
+          ? BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(16),
+            )
+          : null,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 450),
+        child: Column(
+          children: [
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: MultiplicandSelector(),
               ),
             ),
-          ),
+            const Spacer(),
+            Center(
+              child: Text(
+                state.displayOutput,
+                style: Theme.of(context)
+                    .textTheme
+                    .displayLarge
+                    ?.copyWith(color: displayColor),
+              ),
+            ),
+            const Spacer(),
+            Keypad(
+              onNumberTap: (number) => context
+                  .read<MultiplicationExerciseBloc>()
+                  .add(ButtonPressed(number)),
+              onBackspaceTap: () => context
+                  .read<MultiplicationExerciseBloc>()
+                  .add(BackspacePressed()),
+              onRefreshTap: () => context
+                  .read<MultiplicationExerciseBloc>()
+                  .add(ExerciseRequested()),
+            ),
+            const SizedBox(height: 40),
+          ],
         ),
       ),
     );

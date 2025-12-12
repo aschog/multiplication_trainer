@@ -6,15 +6,20 @@ import 'package:multiplication_trainer/features/arithmetic/data/repositories/ari
 import 'package:multiplication_trainer/features/arithmetic/domain/repositories/arithmetic_repository.dart';
 import 'package:multiplication_trainer/features/arithmetic/domain/usecases/generate_multiplication_exercise.dart';
 import 'package:multiplication_trainer/features/arithmetic/presentation/bloc/multiplication_execise_bloc.dart';
+import 'package:multiplication_trainer/features/arithmetic/presentation/widgets/multiplicand_selector/cubit/multiplicand_config_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   //! Features - Arithmetic
+  // Cubit
+  sl.registerLazySingleton(() => MultiplicandConfigCubit());
+
   // Bloc
   sl.registerFactory(
     () => MultiplicationExerciseBloc(
       generateMultiplicationExercise: sl(),
+      multiplicandConfigCubit: sl(),
     ),
   );
 

@@ -17,3 +17,5 @@ class ButtonPressed extends MultiplicationExerciseEvent {
   @override
   List<Object> get props => [buttonText];
 }
+
+class BackspacePressed extends MultiplicationExerciseEvent {}

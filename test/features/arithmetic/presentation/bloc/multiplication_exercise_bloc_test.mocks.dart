@@ -3,16 +3,19 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
+import 'package:bloc/bloc.dart' as _i9;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:multiplication_trainer/core/error/faiures.dart' as _i6;
+import 'package:multiplication_trainer/core/error/faiures.dart' as _i7;
 import 'package:multiplication_trainer/features/arithmetic/domain/entities/multiplication_exercise.dart'
-    as _i7;
+    as _i8;
 import 'package:multiplication_trainer/features/arithmetic/domain/repositories/arithmetic_repository.dart'
     as _i2;
 import 'package:multiplication_trainer/features/arithmetic/domain/usecases/generate_multiplication_exercise.dart'
+    as _i5;
+import 'package:multiplication_trainer/features/arithmetic/presentation/widgets/multiplicand_selector/cubit/multiplicand_config_cubit.dart'
     as _i4;
 
 // ignore_for_file: type=lint
@@ -49,11 +52,22 @@ class _FakeEither_1<L, R> extends _i1.SmartFake implements _i3.Either<L, R> {
         );
 }
 
+class _FakeMultiplicandConfigState_2 extends _i1.SmartFake
+    implements _i4.MultiplicandConfigState {
+  _FakeMultiplicandConfigState_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [GenerateMultiplicationExercise].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGenerateMultiplicationExercise extends _i1.Mock
-    implements _i4.GenerateMultiplicationExercise {
+    implements _i5.GenerateMultiplicationExercise {
   MockGenerateMultiplicationExercise() {
     _i1.throwOnMissingStub(this);
   }
@@ -68,21 +82,131 @@ class MockGenerateMultiplicationExercise extends _i1.Mock
       ) as _i2.ArithmeticRepository);
 
   @override
-  _i5.Future<_i3.Either<_i6.Failure, _i7.MultiplicationExercise>> call(
-          _i4.Params? params) =>
+  _i6.Future<_i3.Either<_i7.Failure, _i8.MultiplicationExercise>> call(
+          _i5.Params? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [params],
         ),
-        returnValue: _i5
-            .Future<_i3.Either<_i6.Failure, _i7.MultiplicationExercise>>.value(
-            _FakeEither_1<_i6.Failure, _i7.MultiplicationExercise>(
+        returnValue: _i6
+            .Future<_i3.Either<_i7.Failure, _i8.MultiplicationExercise>>.value(
+            _FakeEither_1<_i7.Failure, _i8.MultiplicationExercise>(
           this,
           Invocation.method(
             #call,
             [params],
           ),
         )),
-      ) as _i5.Future<_i3.Either<_i6.Failure, _i7.MultiplicationExercise>>);
+      ) as _i6.Future<_i3.Either<_i7.Failure, _i8.MultiplicationExercise>>);
+}
+
+/// A class which mocks [MultiplicandConfigCubit].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMultiplicandConfigCubit extends _i1.Mock
+    implements _i4.MultiplicandConfigCubit {
+  MockMultiplicandConfigCubit() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.MultiplicandConfigState get state => (super.noSuchMethod(
+        Invocation.getter(#state),
+        returnValue: _FakeMultiplicandConfigState_2(
+          this,
+          Invocation.getter(#state),
+        ),
+      ) as _i4.MultiplicandConfigState);
+
+  @override
+  _i6.Stream<_i4.MultiplicandConfigState> get stream => (super.noSuchMethod(
+        Invocation.getter(#stream),
+        returnValue: _i6.Stream<_i4.MultiplicandConfigState>.empty(),
+      ) as _i6.Stream<_i4.MultiplicandConfigState>);
+
+  @override
+  bool get isClosed => (super.noSuchMethod(
+        Invocation.getter(#isClosed),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void toggleMultiplicand(int? multiplicand) => super.noSuchMethod(
+        Invocation.method(
+          #toggleMultiplicand,
+          [multiplicand],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateMultiplicands(List<int>? newMultiplicands) => super.noSuchMethod(
+        Invocation.method(
+          #updateMultiplicands,
+          [newMultiplicands],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void emit(_i4.MultiplicandConfigState? state) => super.noSuchMethod(
+        Invocation.method(
+          #emit,
+          [state],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onChange(_i9.Change<_i4.MultiplicandConfigState>? change) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #onChange,
+          [change],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addError(
+    Object? error, [
+    StackTrace? stackTrace,
+  ]) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addError,
+          [
+            error,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onError(
+    Object? error,
+    StackTrace? stackTrace,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #onError,
+          [
+            error,
+            stackTrace,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.Future<void> close() => (super.noSuchMethod(
+        Invocation.method(
+          #close,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }

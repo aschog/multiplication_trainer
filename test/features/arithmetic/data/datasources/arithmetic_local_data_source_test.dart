@@ -24,7 +24,7 @@ void main() {
   test('should generate exercise with correct calculation based on mock calls',
       () async {
     // ARRANGE
-    const int listLengthMinusOne = 4; // max for multiplicand index: 5 - 1
+    const int listLength = 5; // max for multiplicand index: 5
     const int maxMultiplier = 10; // max for multiplier value: 10
 
     const int selectedIndex = 3; // We force the index to be 3 (value 8)
@@ -32,8 +32,8 @@ void main() {
     const int expectedMultiplier = 7; // We force the multiplier to be 7
     const int expectedProduct = 56;
 
-    // Stub 1st call: random.nextInt(4) -> 3 (to select 8)
-    when(mockRandom.nextInt(listLengthMinusOne)).thenReturn(selectedIndex);
+    // Stub 1st call: random.nextInt(5) -> 3 (to select 8)
+    when(mockRandom.nextInt(listLength)).thenReturn(selectedIndex);
 
     // Stub 2nd call: random.nextInt(10) -> 7 (to select 7)
     when(mockRandom.nextInt(maxMultiplier)).thenReturn(expectedMultiplier);
@@ -48,14 +48,14 @@ void main() {
     expect(result.product, equals(expectedProduct));
 
     // VERIFY: Check that the exact calls were made
-    verify(mockRandom.nextInt(listLengthMinusOne)).called(1);
+    verify(mockRandom.nextInt(listLength)).called(1);
     verify(mockRandom.nextInt(maxMultiplier)).called(1);
     verifyNoMoreInteractions(mockRandom);
   });
 
   test('should correctly handle edge case where multiplier is zero', () async {
     // ARRANGE
-    const int listLengthMinusOne = 4;
+    const int listLength = 5;
     const int maxMultiplier = 10;
 
     const int selectedIndex = 0; // Selects 2
@@ -64,7 +64,7 @@ void main() {
     const int expectedProduct = 0;
 
     // Stub calls
-    when(mockRandom.nextInt(listLengthMinusOne)).thenReturn(selectedIndex);
+    when(mockRandom.nextInt(listLength)).thenReturn(selectedIndex);
     when(mockRandom.nextInt(maxMultiplier)).thenReturn(expectedMultiplier);
 
     // ACT
@@ -76,7 +76,7 @@ void main() {
     expect(result.multiplicand, equals(expectedMultiplicand));
 
     // VERIFY
-    verify(mockRandom.nextInt(listLengthMinusOne)).called(1);
+    verify(mockRandom.nextInt(listLength)).called(1);
     verify(mockRandom.nextInt(maxMultiplier)).called(1);
     verifyNoMoreInteractions(mockRandom);
   });
@@ -84,16 +84,14 @@ void main() {
   test('should correctly handle edge case of single multiplicand', () async {
     // ARRANGE
     const List<int> singleMultiplicand = [99]; // Length 1
-    const int listLengthMinusOne = 0; // 1 - 1 = 0. nextInt(0) must return 0.
     const int maxMultiplier = 10;
 
-    const int expectedIndex = 0;
     const int expectedMultiplicand = 99;
     const int expectedMultiplier = 4;
     const int expectedProduct = 396;
 
     // Stub calls
-    when(mockRandom.nextInt(listLengthMinusOne)).thenReturn(expectedIndex);
+    // Note: nextInt for multiplicand selection is skipped when length is 1
     when(mockRandom.nextInt(maxMultiplier)).thenReturn(expectedMultiplier);
 
     // ACT
@@ -106,7 +104,6 @@ void main() {
     expect(result.product, equals(expectedProduct));
 
     // VERIFY
-    verify(mockRandom.nextInt(listLengthMinusOne)).called(1);
     verify(mockRandom.nextInt(maxMultiplier)).called(1);
     verifyNoMoreInteractions(mockRandom);
   });

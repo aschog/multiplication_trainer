@@ -17,6 +17,8 @@ dependencies:
   shared_preferences: ^2.2.3
   cupertino_icons: ^1.0.6
   confetti: ^0.7.0
+  google_fonts: ^6.3.3
+  bloc: ^8.1.4
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +29,7 @@ dev_dependencies:
   analyzer: ^6.4.1
 
   flutter_lints: ^4.0.0
+  mocktail: ^1.0.4
 
 flutter:
 
