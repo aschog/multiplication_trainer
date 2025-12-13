@@ -77,11 +77,24 @@ class _MultiplicationTrainerViewState
         child: Column(
           children: [
             const Spacer(),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: MultiplicandSelector(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () => _showInfoDialog(context),
+                    icon: Icon(
+                      Icons.info_outline_rounded,
+                      size: 32,
+                      color: Theme.of(context)
+                          .extension<GameThemeColors>()!
+                          .textMainColor,
+                    ),
+                    tooltip: 'Info',
+                  ),
+                  const MultiplicandSelector(),
+                ],
               ),
             ),
             const Spacer(),
@@ -109,6 +122,98 @@ class _MultiplicationTrainerViewState
             const SizedBox(height: 40),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    final gameColors = Theme.of(context).extension<GameThemeColors>()!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Multiplication Info',
+          style: TextStyle(color: gameColors.textMainColor),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Multiplication is repeated addition.',
+              style: TextStyle(color: gameColors.textMainColor, fontSize: 16),
+            ),
+            const SizedBox(height: 24),
+            RichText(
+              text: TextSpan(
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                    text: 'Multiplicand',
+                    style: TextStyle(color: gameColors.numberBtnColor2),
+                  ),
+                  TextSpan(
+                    text: ' × ',
+                    style: TextStyle(color: gameColors.textMainColor),
+                  ),
+                  TextSpan(
+                    text: 'Multiplier',
+                    style: TextStyle(color: gameColors.numberBtnColor1),
+                  ),
+                  TextSpan(
+                    text: ' = ',
+                    style: TextStyle(color: gameColors.textMainColor),
+                  ),
+                  TextSpan(
+                    text: 'Product',
+                    style: TextStyle(color: gameColors.numberBtnColor3),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            RichText(
+              text: TextSpan(
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                    text: '7',
+                    style: TextStyle(color: gameColors.numberBtnColor2),
+                  ),
+                  TextSpan(
+                    text: ' × ',
+                    style: TextStyle(color: gameColors.textMainColor),
+                  ),
+                  TextSpan(
+                    text: '8',
+                    style: TextStyle(color: gameColors.numberBtnColor1),
+                  ),
+                  TextSpan(
+                    text: ' = ',
+                    style: TextStyle(color: gameColors.textMainColor),
+                  ),
+                  TextSpan(
+                    text: '56',
+                    style: TextStyle(color: gameColors.numberBtnColor3),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'OK',
+              style: TextStyle(
+                  color: gameColors.textMainColor, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
     );
   }
