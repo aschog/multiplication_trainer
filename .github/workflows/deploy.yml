@@ -26,7 +26,7 @@ jobs:
         run: flutter pub get
 
       - name: Build for web 🕸️
-        run: flutter build web --release --base-href /multiplication_trainer/
+        run: flutter build web --release --base-href /tap-and-learn/
 
       - name: Deploy to GitHub Pages 🚀
         uses: peaceiris/actions-gh-pages@v4
