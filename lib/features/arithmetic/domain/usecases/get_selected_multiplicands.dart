@@ -1,0 +1,15 @@
+import 'package:dartz/dartz.dart';
+import 'package:tap_and_learn/core/error/faiures.dart';
+import 'package:tap_and_learn/core/usecases/usecase.dart';
+import 'package:tap_and_learn/features/arithmetic/domain/repositories/arithmetic_repository.dart';
+
+class GetSelectedMultiplicands implements UseCase<List<int>, NoParams> {
+  final ArithmeticRepository repository;
+
+  GetSelectedMultiplicands(this.repository);
+
+  @override
+  Future<Either<Failure, List<int>>> call(NoParams params) async {
+    return await repository.getSelectedMultiplicands();
+  }
+}

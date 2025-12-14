@@ -15,4 +15,25 @@ class ArithmeticRepositoryImpl implements ArithmeticRepository {
         await localDataSource.generateMultiplicationExercise(multiplicands);
     return Right(exerciseModel);
   }
+
+  @override
+  Future<Either<Failure, List<int>>> getSelectedMultiplicands() async {
+    try {
+      final result = await localDataSource.getSelectedMultiplicands();
+      return Right(result);
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveSelectedMultiplicands(
+      List<int> multiplicands) async {
+    try {
+      await localDataSource.saveSelectedMultiplicands(multiplicands);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
 }

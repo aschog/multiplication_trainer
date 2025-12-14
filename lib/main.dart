@@ -6,6 +6,7 @@ import 'package:tap_and_learn/config/theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   runApp(const TapAndLearnApp());
 }

@@ -19,6 +19,7 @@ void main() {
 
   setUp(() {
     mockCubit = MockMultiplicandConfigCubit();
+    when(() => mockCubit.updateMultiplicands(any())).thenAnswer((_) async {});
   });
 
   testWidgets('MultiplicandSelector opens menu and interacts with cubit',
