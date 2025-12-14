@@ -14,6 +14,7 @@ class MultiplicationExerciseBloc
     extends Bloc<MultiplicationExerciseEvent, MultiplicationExerciseState> {
   final GenerateMultiplicationExercise generateMultiplicationExercise;
   final MultiplicandConfigCubit multiplicandConfigCubit;
+  late StreamSubscription _multiplicandSubscription;
   String _userInput = '';
   bool _isShowingExercise = true;
 
@@ -26,7 +27,17 @@ class MultiplicationExerciseBloc
     on<ButtonPressed>(_onButtonPressed);
     on<BackspacePressed>(_onBackspacePressed);
 
+    _multiplicandSubscription = multiplicandConfigCubit.stream.listen((state) {
+      add(ExerciseRequested());
+    });
+
     add(ExerciseRequested());
+  }
+
+  @override
+  Future<void> close() {
+    _multiplicandSubscription.cancel();
+    return super.close();
   }
 
   Future<void> _onExerciseRequested(

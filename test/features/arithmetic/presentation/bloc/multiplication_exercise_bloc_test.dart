@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,12 +15,21 @@ import 'multiplication_exercise_bloc_test.mocks.dart';
 void main() {
   late MockGenerateMultiplicationExercise mockGenerateMultiplicationExercise;
   late MockMultiplicandConfigCubit mockMultiplicandConfigCubit;
+  late StreamController<MultiplicandConfigState> multiplicandConfigStreamController;
 
   setUp(() {
     mockGenerateMultiplicationExercise = MockGenerateMultiplicationExercise();
     mockMultiplicandConfigCubit = MockMultiplicandConfigCubit();
+    multiplicandConfigStreamController = StreamController<MultiplicandConfigState>();
+
     when(mockMultiplicandConfigCubit.state).thenReturn(
         const MultiplicandConfigState(selectedMultiplicands: [1, 2, 3]));
+    when(mockMultiplicandConfigCubit.stream)
+        .thenAnswer((_) => multiplicandConfigStreamController.stream);
+  });
+
+  tearDown(() {
+    multiplicandConfigStreamController.close();
   });
 
   // product is technically not in the constructor of MultiplicationExercise in some versions,
@@ -217,6 +227,43 @@ void main() {
         tExerciseLoadedState.copyWith(
             displayOutput: '7 × 8', status: AnswerStatus.initial),
       ],
+    );
+  });
+
+  group('MultiplicandConfigChanged', () {
+    blocTest<MultiplicationExerciseBloc, MultiplicationExerciseState>(
+      'requests new exercise when configuration changes',
+      build: () {
+        var callCount = 0;
+        when(mockGenerateMultiplicationExercise(any))
+            .thenAnswer((_) async {
+              callCount++;
+              if (callCount == 1) {
+                return const Right(tExercise);
+              }
+              return const Right(MultiplicationExercise(
+                  multiplicand: 2, multiplier: 3, product: 6));
+            });
+        return MultiplicationExerciseBloc(
+          generateMultiplicationExercise: mockGenerateMultiplicationExercise,
+          multiplicandConfigCubit: mockMultiplicandConfigCubit,
+        );
+      },
+      act: (bloc) {
+        multiplicandConfigStreamController.add(
+            const MultiplicandConfigState(selectedMultiplicands: [1, 2]));
+      },
+      expect: () => [
+        tExerciseLoadedState, // Initial load
+        tExerciseLoadedState.copyWith(
+            exercise: const MultiplicationExercise(
+                multiplicand: 2, multiplier: 3, product: 6),
+            displayOutput: '2 × 3',
+            status: AnswerStatus.initial), // Reload after config change
+      ],
+      verify: (_) {
+        verify(mockGenerateMultiplicationExercise(any)).called(2);
+      },
     );
   });
 }
