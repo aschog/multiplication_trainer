@@ -101,6 +101,7 @@ class _MultiplicationTrainerViewState
             const Spacer(),
             Center(
               child: Text(
+                key: const Key('display_output'),
                 state.displayOutput,
                 style: Theme.of(context)
                     .textTheme

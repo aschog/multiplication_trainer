@@ -93,7 +93,9 @@ class MultiplicationExerciseBloc
           emit(state.copyWith(
               displayOutput: product, status: AnswerStatus.correct));
           await Future.delayed(const Duration(seconds: 1)); // Wait for 1 second
-          add(ExerciseRequested());
+          if (!isClosed) {
+            add(ExerciseRequested());
+          }
         } else {
           emit(state.copyWith(
               displayOutput:
@@ -103,8 +105,10 @@ class MultiplicationExerciseBloc
           _userInput = '';
           final display = '${exercise.multiplicand} × ${exercise.multiplier}';
           _isShowingExercise = true;
-          emit(state.copyWith(
-              displayOutput: display, status: AnswerStatus.initial));
+          if (!isClosed) {
+            emit(state.copyWith(
+                displayOutput: display, status: AnswerStatus.initial));
+          }
         }
       }
     } else if (buttonText == 'AC') {
